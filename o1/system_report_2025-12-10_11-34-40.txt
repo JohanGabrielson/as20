@@ -1,0 +1,110 @@
+
+=== SYSTEMINFO ===
+Linux kali 6.16.8+kali-amd64 #1 SMP PREEMPT_DYNAMIC Kali 6.16.8-1kali1 (2025-09-24) x86_64 GNU/Linux
+johan    seat0        2025-12-09 13:29 (:0)
+
+=== AKTUELL ANVÄNDARE ===
+johan
+
+
+=== ANVÄNDARE MED SHELL ===
+root:x:0:0:root:/root:/usr/bin/zsh
+postgres:x:114:118:PostgreSQL administrator:/var/lib/postgresql:/bin/bash
+johan:x:1000:1000:johan,,,:/home/johan:/usr/bin/zsh
+
+=== NÄTVERK ===
+IP configuration: 
+    inet 127.0.0.1/8 scope host lo
+    inet6 ::1/128 scope host noprefixroute 
+    inet 10.0.2.15/24 brd 10.0.2.255 scope global dynamic noprefixroute eth0
+    inet6 fd17:625c:f037:2:69c:8d5b:118a:813d/64 scope global temporary dynamic 
+    inet6 fd17:625c:f037:2:a00:27ff:fe70:8927/64 scope global dynamic mngtmpaddr noprefixroute 
+    inet6 fe80::a00:27ff:fe70:8927/64 scope link noprefixroute 
+routing table: 
+default via 10.0.2.2 dev eth0 proto dhcp src 10.0.2.15 metric 100 
+10.0.2.0/24 dev eth0 proto kernel scope link src 10.0.2.15 metric 100 
+active connections
+Netid State Recv-Q Send-Q Local Address:Port Peer Address:Port
+
+
+=== Hardware ===
+CPU: 
+Architecture:                            x86_64
+CPU op-mode(s):                          32-bit, 64-bit
+Address sizes:                           48 bits physical, 48 bits virtual
+Byte Order:                              Little Endian
+CPU(s):                                  4
+On-line CPU(s) list:                     0-3
+Vendor ID:                               AuthenticAMD
+Model name:                              AMD Ryzen AI 7 350 w/ Radeon 860M
+CPU family:                              26
+Model:                                   96
+Thread(s) per core:                      1
+Core(s) per socket:                      4
+Socket(s):                               1
+Stepping:                                0
+BogoMIPS:                                3992.41
+Flags:                                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt rdtscp lm constant_tsc rep_good nopl xtopology nonstop_tsc cpuid extd_apicid tsc_known_freq pni pclmulqdq ssse3 fma cx16 sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy cr8_legacy abm sse4a misalignsse 3dnowprefetch vmmcall fsgsbase bmi1 avx2 bmi2 invpcid rdseed adx clflushopt sha_ni arat
+Hypervisor vendor:                       KVM
+Virtualization type:                     full
+NUMA node(s):                            1
+NUMA node0 CPU(s):                       0-3
+Vulnerability Gather data sampling:      Not affected
+Vulnerability Ghostwrite:                Not affected
+Vulnerability Indirect target selection: Not affected
+Vulnerability Itlb multihit:             Not affected
+Vulnerability L1tf:                      Not affected
+Vulnerability Mds:                       Not affected
+Vulnerability Meltdown:                  Not affected
+Vulnerability Mmio stale data:           Not affected
+Vulnerability Old microcode:             Not affected
+Vulnerability Reg file data sampling:    Not affected
+Vulnerability Retbleed:                  Not affected
+Vulnerability Spec rstack overflow:      Vulnerable: Safe RET, no microcode
+Vulnerability Spec store bypass:         Not affected
+Vulnerability Spectre v1:                Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+Vulnerability Spectre v2:                Mitigation; Retpolines; STIBP disabled; RSB filling; PBRSB-eIBRS Not affected; BHI Not affected
+Vulnerability Srbds:                     Not affected
+Vulnerability Tsa:                       Not affected
+Vulnerability Tsx async abort:           Not affected
+Vulnerability Vmscape:                   Not affected
+Memory: 
+               total        used        free      shared  buff/cache   available
+Mem:           7.8Gi       2.2Gi       4.7Gi        25Mi       1.1Gi       5.5Gi
+Swap:          2.7Gi          0B       2.7Gi
+Disks: 
+NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+sda      8:0    0 52.7G  0 disk 
+├─sda1   8:1    0 49.9G  0 part /
+├─sda2   8:2    0    1K  0 part 
+└─sda5   8:5    0  2.7G  0 part [SWAP]
+sr0     11:0    1 1024M  0 rom  
+
+=== Services ===
+Active services
+  UNIT                           LOAD   ACTIVE SUB     DESCRIPTION
+  accounts-daemon.service        loaded active running Accounts Service
+  colord.service                 loaded active running Manage, Install and Generate Color Profiles
+  cron.service                   loaded active running Regular background program processing daemon
+  dbus.service                   loaded active running D-Bus System Message Bus
+  getty@tty1.service             loaded active running Getty on tty1
+  haveged.service                loaded active running Entropy Daemon based on the HAVEGE algorithm
+  lightdm.service                loaded active running Light Display Manager
+  ModemManager.service           loaded active running Modem Manager
+  NetworkManager.service         loaded active running Network Manager
+  pcscd.service                  loaded active running PC/SC Smart Card Daemon
+  polkit.service                 loaded active running Authorization Manager
+  rtkit-daemon.service           loaded active running RealtimeKit Scheduling Policy Service
+  systemd-journald.service       loaded active running Journal Service
+  systemd-logind.service         loaded active running User Login Management
+  systemd-udevd.service          loaded active running Rule-based Manager for Device Events and Files
+  udisks2.service                loaded active running Disk Manager
+  upower.service                 loaded active running Daemon for power management
+  user@1000.service              loaded active running User Manager for UID 1000
+  virtualbox-guest-utils.service loaded active running Virtualbox guest utils
+
+Legend: LOAD   → Reflects whether the unit definition was properly loaded.
+        ACTIVE → The high-level unit activation state, i.e. generalization of SUB.
+        SUB    → The low-level unit activation state, values depend on unit type.
+
+19 loaded units listed.
