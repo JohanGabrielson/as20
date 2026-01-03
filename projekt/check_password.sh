@@ -19,6 +19,12 @@ if [[ ! -f "$WORDLIST" ]]; then # Check if file is available
     echo "WARNING: rockyou.txt is not found, local wordlist check is not available."
 fi
 
+# ==== Check so script is not running as root ====
+
+if [[ "$EUID" -eq 0 ]]; then
+    echo "WARNING: Script is running as root. This is not recommended."
+fi
+
 
 # ==== Function: Check complexity and length  ====
 # ====            =====
