@@ -1,8 +1,22 @@
 #!/bin/bash
 
-# ==== Funcition: Check complexity and length  ====
+# ==== Environment check ====
+# Check that OS is Linux
+if [[ "$(uname -s)" != "Linux" ]]; then
+    echo "Error: Thiws script must be run on Linux."
+    exit 1
+fi
+
+# ==== Check Internet connection ====
+if ! curl -s --head https://api.pwnedpasswords.com > /dev/null; then
+    echo "Error. No Internet connection: Can't check for online leaks."
+    exit 1
+fi
+
+# ==== Function: Check complexity and length  ====
 # ====            =====
-# ==== Purpose: check that password has sufficient length and contains a digit
+# ==== Purpose: check that password has       ====
+# ==== a sufficient length and contains a digit
 # ==== ======== =====
 check_length_and_complexity() {
     local pw="$1" # Takes password as first argument 
@@ -22,7 +36,7 @@ check_length_and_complexity() {
 }
 
 # ==== Function: Check wordlist  =====
-# ====           =====
+# ====           =====           =====
 # ==== Purpose: Check if password is in rockyou.txt 
 # ==== ======== =====
 
@@ -63,7 +77,7 @@ check_online_leak() {
 # ==== MAIN ====
 
 # -s makes the characters hidden when entered
-read -s -p "Enter a password to check: " password
+read -s -p  "Enter a password to check: " password
 echo "" 
 # Run the functions one by one, if 1 is returned it is cancelled
 check_length_and_complexity "$password" || exit 1
