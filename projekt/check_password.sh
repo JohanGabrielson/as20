@@ -13,6 +13,13 @@ if ! curl -s --head https://api.pwnedpasswords.com > /dev/null; then
     exit 1
 fi
 
+# ==== Check that wordlist is available ====
+WORDLIST="/usr/share/wordlists/rockyou.txt"
+if [[ ! -f "$WORDLIST" ]]; then # Check if file is available
+    echo "WARNING: rockyou.txt is not found, local wordlist check is not available."
+fi
+
+
 # ==== Function: Check complexity and length  ====
 # ====            =====
 # ==== Purpose: check that password has       ====
