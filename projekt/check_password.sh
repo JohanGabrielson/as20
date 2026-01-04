@@ -26,12 +26,14 @@ log_event "INFO" "SCRIPT STARTED"
 # Check that OS is Linux
 if [[ "$(uname -s)" != "Linux" ]]; then
     echo "Error: Thiws script must be run on Linux."
+    log_event "ERROR" "Script is not running on Linux"
     exit 1
 fi
 
 # ==== Check Internet connection ====
 if ! curl -s --head https://api.pwnedpasswords.com > /dev/null; then
-    echo "Error. No Internet connection: Can't check for online leaks."
+    echo "ERROR" "No Internet connection: Can't check for online leaks."
+    log_event "ERROR" "No Internet connection" 
     exit 1
 fi
 
@@ -39,12 +41,14 @@ fi
 Wordlist="/usr/share/wordlists/rockyou.txt"
 if [[ ! -f "$Wordlist" ]]; then # Check if file is available
     echo "WARNING: rockyou.txt is not found, local wordlist check is not available."
+    log_event "WARNING" "rockyou.txt is missing"
 fi
 
 # ==== Check so script is not running as root ====
 
 if [[ "$EUID" -eq 0 ]]; then
     echo "WARNING: Script is running as root. This is not recommended."
+    log_event "WARNING" "Script is running as root"
 fi
 
 
@@ -58,15 +62,16 @@ check_length_and_complexity() {
     log_event "INFO" "Checking password length and complexity"
     # Checks password length
     if [[ ${#pw} -lt 8 ]]; then 
-        log_event "ERROR" "Password is too short"
         echo "Password is too short (min 8 characters)"
+        log_event "ERROR" "Password is too short"
         return 1
     fi
 
     # Checks that password contain A-Z, a-z, 0-9
     if ! [[ "$pw" =~ [A-Z] && "$pw" =~ [a-z] && "$pw" =~ [0-9] ]]; then
-        log_event "ERROR" "Password lacks complexity (must contain uppercase, lowercase and digits)"
-        echo "Password lacks complexity (must include capital lettes, lowercase and digits)"
+       
+        log_event "ERROR" "Password lacks complexity"
+        echo "Password lacks complexity (must include capital lettes, lowercase and digits)"        
         return 1
     fi
     # Save to logfile
@@ -100,7 +105,7 @@ check_local_wordlist() {
 # ==== ======== ====
 check_online_leak() {
     local pw="$1"
-    # Hash password with sha-1 and convert to uppercase letters
+    # Hash password with sha-1(needed to work with HIBP) and convert to uppercase letters
     local sha1=$(printf "%s" "$pw" | sha1sum | awk '{print toupper($1)}')
     # Split password in prefix (5 characters) and suffix (remaining)
     local prefix=${sha1:0:5}
@@ -145,5 +150,5 @@ check_online_leak "$password" || {
 log_event "INFO" "Password approved"
 # If everything passes: 
 echo "Password is approved."
-
+log_event "INFO" "Script finished successfully"
 
