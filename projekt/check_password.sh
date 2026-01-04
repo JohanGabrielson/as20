@@ -126,29 +126,47 @@ check_online_leak() {
 
 # ==== MAIN ====
 
-# -s makes the characters hidden when entered
-read -s -p  "Enter a password to check: " password
-echo "" 
+while true; do
 
-log_event "INFO" "Password check initiated."
-# Run the functions one by one, if 1 is returned it is cancelled
-check_length_and_complexity "$password" || {
-    log_event "ERROR" "Complexity check failed" 
-    exit 1
-}
+    # -s makes the characters hidden when entered
+    read -s -p  "Enter a password to check: " password
+    echo "" 
+    log_event "INFO" "Password check initiated."
+    
 
-check_local_wordlist "$password" || {
-    log_event "ERROR" "Wordlist check failed" 
-    exit 1 
-}
+    if ! check_length_and_complexity "$password"; then
+        log_event "ERROR" "Complexity check failed"
+    elif ! check_local_wordlist "$password"; then
+        log_event "ERROR" "Wordlist check failed"
+    elif ! check_online_leak "$password"; then
+        log_event "ERROR" "Online leak check failed"
+    else 
+        echo "Password is approved."
+        log_event "ERROR" "Password is approved"
+        break # Finishes the script once the password is approved
+    fi
 
-check_online_leak "$password" || {
-    log_event "ERROR" "Online leak check failed " 
-    exit 1
-}
+    # Check if the user wants to try again
+    echo ""
+    read -p "Do you want to try another password? (y/n):" choice
 
-log_event "INFO" "Password approved"
-# If everything passes: 
-echo "Password is approved."
-log_event "INFO" "Script finished successfully"
+    case "$choice" in
+        y|Y)
+           log_event "INFO" "User chose to try again"
+           echo ""
+           ;;
+        n|N)
+           log_event "INFO" "User chose to exit script"
+           echo "Exiting"
+           exit 0
+           ;;
+        
+   
+   esac
+done
 
+   
+    
+
+
+ 
