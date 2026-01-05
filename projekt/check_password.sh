@@ -160,6 +160,12 @@ while true; do
            echo "Exiting"
            exit 0
            ;;
+        *) 
+           log_event "WARNING" "Invalid menu selection"
+           echo "Invalid option. Exiting."
+           exit 1
+           ;;
+
         
    
    esac
