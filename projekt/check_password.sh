@@ -5,6 +5,9 @@
 SCRIPT_VERSION="1.0"
 SCRIPT_AUTHOR="Johan"
 
+NOLOG=false
+DEBUG=false
+
 # ==== Help  ====
 show_help() {
     echo "Password Checker Script"
@@ -14,13 +17,15 @@ show_help() {
     echo "Usage $0 [OPTONS]"
     echo ""
     echo "Options:"
-    echo " -h, --help     Show this help message and exit" 
-    echo " -v,  --version Show verion and author"
+    echo " -h,  --help      Show this help message and exit" 
+    echo " -v,  --version   Show verion and author"
+    echo "      --nolog     Disable logging to file"
+    echo "      --debug     Enable debugging"
     echo ""
     echo "Examples:"
-    echo "  $0            Start the interactive password checker"
-    echo "  $0 --help         Show help information"
-    echo "  $0 --version  Show version and author"
+    echo "  $0              Start the interactive password checker"
+    echo "  $0 --help       Show help information"
+    echo "  $0 --version    Show version and author"
     echo ""
 
 
@@ -44,6 +49,14 @@ if [[ $# -gt 0  ]]; then
            show_version
            exit 0
            ;;
+       --nolog)
+           NOLOG=true
+           echo "[INFO] Logging disabled"
+           ;;
+       --debug)
+           DEBUG=true
+           echo "[DEBUG] Debug mode enabled"
+           ;;
        *) echo "Unknown option: $1"
           echo "Use --help for usage information"
           exit 1
@@ -51,7 +64,15 @@ if [[ $# -gt 0  ]]; then
     esac
 fi
 
-# ==== Logging ====
+# ==== Debug  ====
+debug() {
+    if [[ "$DEBUG" == true ]]; then
+        echo "[DEBUG] $1"
+
+    fi
+}
+
+#=== Logging ====
 
 # Logfile path
 Logfile="$HOME/password_checker.log"
@@ -65,6 +86,12 @@ fi
 log_event() {
     local level="$1"
     local message="$2"
+    
+    # Skip logging if NOLOG=TRUE
+    if [[ "$NOLOG" == true ]]; then
+        return
+    fi
+
     local timestamp
     timestamp=$(date "+%Y-%m-%d %H:%M:%S")
     echo "$timestamp [$level] $message" >> "$Logfile"
@@ -110,9 +137,14 @@ fi
 # ==== ======== =====
 check_length_and_complexity() {
     local pw="$1" # Takes password as first argument 
+    
+    debug "Starting complexity check"
+    debug "Password length: ${#pw}"
+
     log_event "INFO" "Checking password length and complexity"
     # Checks password length
-    if [[ ${#pw} -lt 8 ]]; then 
+    if [[ ${#pw} -lt 8 ]]; then
+        debug "Password too short: ${#pw} characters" 
         echo "Password is too short (min 8 characters)"
         log_event "ERROR" "Password is too short"
         return 1
@@ -120,11 +152,12 @@ check_length_and_complexity() {
 
     # Checks that password contain A-Z, a-z, 0-9
     if ! [[ "$pw" =~ [A-Z] && "$pw" =~ [a-z] && "$pw" =~ [0-9] ]]; then
-       
+        debug "Password failed complexity check"
         log_event "ERROR" "Password lacks complexity"
-        echo "Password lacks complexity (must include capital lettes, lowercase and digits)"        
+        echo "Password lacks complexity (must include capital lettes, lowercase and digits)"
         return 1
     fi
+    debug "Password passed complexity check"
     # Save to logfile
     log_event "INFO" "Password complexity and length OK" 
     return 0 # All ok, criteria is met
@@ -137,15 +170,21 @@ check_length_and_complexity() {
 
 check_local_wordlist() {
     local pw="$1"
+ 
+    debug "Starting local wordlist check"
+ 
     # Wordlist pathway
     local wordlist="/usr/share/wordlists/rockyou.txt"
+    debug "Wordlist path: $wordlist"
     log_event "INFO" "Checking local wordlist: rockyou.txt"
     # Checking if there is a match
     if grep -Fxq "$pw" "$wordlist"; then
+        debug "Password found in rockyou.txt"
         log_event "WARNING" "Password is listed in rockyou.txt"
         echo "Password is listed in  rockyou.txt - choose another."
         return 1
     fi
+    debug "Password not found in rockyou.txt"
     log_event "INFO" "Password not found in rockyou.txt"
     return 0 # Not found in rockyou.txt
 }
@@ -156,21 +195,33 @@ check_local_wordlist() {
 # ==== ======== ====
 check_online_leak() {
     local pw="$1"
+
+    debug "Starting online leak check"
+
     # Hash password with sha-1(needed to work with HIBP) and convert to uppercase letters
     local sha1=$(printf "%s" "$pw" | sha1sum | awk '{print toupper($1)}')
+    debug "SHA-1 hash (uppercase): $sha1"
+   
     # Split password in prefix (5 characters) and suffix (remaining)
     local prefix=${sha1:0:5}
     local suffix=${sha1:5}
     
+    debug "haveibeenpwned prefix: $prefix"
+    debug "haveibeenpwned suffix: $suffix" 
+   
+
     #Retrieve all hash-suffix matching the prefix
+    debug "Sending request to haveibeenpwned api..."
     local response=$(curl -s "https://api.pwnedpasswords.com/range/$prefix")
 
     log_event "INFO" "Checking online leaks (HIBP API)."
     # Check if it is available in the API response
     if echo "$response" | grep -q "^$suffix:"; then
+        debug "haveibeenpwned match found for suffix: $suffix"
         echo "Password has occured in leaks - choose another."
         return 1
     fi
+    debug "No match found in haveibeenpwned respose"
     log_event "INFO" "Password not found in online leaks."
     return 0 #Password is not in leak
 }
