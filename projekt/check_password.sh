@@ -1,5 +1,54 @@
 #!/bin/bash
 
+
+# ==== Version info  ====
+SCRIPT_VERSION="1.0"
+SCRIPT_AUTHOR="Johan"
+
+# ==== Help  ====
+show_help() {
+    echo "Password Checker Script"
+    echo ""
+    echo "Usage $0 [OPTONS]"
+    echo ""
+    echo "Options:"
+    echo " -h, --help     Show this help message and exit" 
+    echo " -v,  --version Show verion and author"
+    echo ""
+    echo "Examples:"
+    echo "  $0            Start the interactive password checker"
+    echo "  $0 -h         Show help information"
+    echo "  $0 --version  Show version and author"
+    echo ""
+
+
+}
+
+# ==== Version ====
+show_version() {
+    echo "Password checker script v$SCRIPT_VERSION"
+    echo "Developed by $SCRIPT_AUTHOR"
+}
+
+
+# ==== Arguments ====
+if [[ $# -gt 0  ]]; then 
+    case "$1" in
+       -h|--help)
+           show_help
+           exit 0
+           ;;
+       -v|--version)
+           show_version
+           exit 0
+           ;;
+       *) echo "Unknown option: $1"
+          echo "Use --help for usage information"
+          exit 1
+          ;;
+    esac
+fi
+
 # ==== Logging ====
 
 # Logfile path
