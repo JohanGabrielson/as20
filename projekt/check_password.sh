@@ -59,7 +59,7 @@ if [[ $# -gt 0  ]]; then
            ;;
        *) echo "Unknown option: $1"
           echo "Use --help for usage information"
-          exit 1
+4            exit 1
           ;;
     esac
 fi
@@ -157,6 +157,16 @@ check_length_and_complexity() {
         echo "Password lacks complexity (must include capital lettes, lowercase and digits)"
         return 1
     fi
+  
+    # Special characters
+    if ! [[ "$pw" =~ [^A-Za-z0-9] ]]; then
+        debug "Password missing special character"
+        log_event "ERROR" "Password missing special character"
+        echo "Password must include one special character"
+        return 1
+    fi
+
+
     debug "Password passed complexity check"
     # Save to logfile
     log_event "INFO" "Password complexity and length OK" 
