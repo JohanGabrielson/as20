@@ -9,6 +9,8 @@ SCRIPT_AUTHOR="Johan"
 show_help() {
     echo "Password Checker Script"
     echo ""
+    echo "This script checks password strength, compares against rockyou.txt and checks if the  password is in known data breaches."
+    echo ""
     echo "Usage $0 [OPTONS]"
     echo ""
     echo "Options:"
@@ -17,7 +19,7 @@ show_help() {
     echo ""
     echo "Examples:"
     echo "  $0            Start the interactive password checker"
-    echo "  $0 -h         Show help information"
+    echo "  $0 --help         Show help information"
     echo "  $0 --version  Show version and author"
     echo ""
 
