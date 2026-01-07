@@ -156,12 +156,14 @@ show_header() {
 
     echo -e "${MAGENTA}"
     echo "┌──────────────────────────────────────────────┐"
-    echo "│        PASSWORD SECURITY CHECKER             │"
-    echo "------------------------------------------------"
-    echo "   Version : $SCRIPT_VERSION"
-    echo "   Author  : $SCRIPT_AUTHOR"
-    echo "   Date    : $now"
-    echo "------------------------------------------------"
+    echo "│              PASSWORD SECURITY CHECKER       │"
+    echo "├──────────────────────────────────────────────┤"
+
+    printf                "Version : $SCRIPT_VERSION     
+    printf                "Author  : $SCRIPT_AUTHOR      
+    printf                "Date    : $now                
+                                                   
+    echo "└──────────────────────────────────────────────┘"
     echo -e "${RESET}"
 
 }
