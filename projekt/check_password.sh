@@ -314,12 +314,14 @@ while true; do
     echo "" 
     log_event "INFO" "Password check initiated."
 
-    # Checks for empty password
-    if [[ -z "$password"  ]]; then
-        echo "Password cannot be empty. Please try again."
-        log_event "ERROR" "Empty password entered"
+    # Checks for empty password or spaces
+    if [[ -z "$password" || "$password" =~ ^[[:space:]]+$  ]]; then
+        echo "Password cannot be empty or only spaces. Please try again."
+        log_event "ERROR" "Empty or whitespace-only password entered"
         continue
     fi
+
+    
     
 
     if ! check_length_and_complexity "$password"; then
