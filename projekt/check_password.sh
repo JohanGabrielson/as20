@@ -22,6 +22,7 @@ show_help() {
     echo "      --nolog     Disable logging to file"
     echo "      --debug     Enable debugging"
     echo ""
+    echo ""
     echo "Examples:"
     echo "  $0              Start the interactive password checker"
     echo "  $0 --help       Show help information"
@@ -37,6 +38,69 @@ show_version() {
     echo "Developed by $SCRIPT_AUTHOR"
 }
 
+show_man() {
+    cat << 'EOF'
+NAME
+    check_password.sh - Interactive Password Checker
+SYNOPSIS
+    check_password.sh
+DESCRIPTION
+    This script evaluates password strength by checking:
+    - Length and complexity requirements
+    - Presence in the local rockyou.txt wordlist
+    - Exposure in online leaks via HaveIBeenPwned API
+    
+   The script supports logging, debug mode and interactive retry prompt
+
+OPTIONS
+    -h, --help
+        Show a short help message.
+
+    -v, --version
+        Show version and author info.
+
+    --nolog
+        Disavble logging to file.
+
+    --debug
+        Enable verbose debug output.
+
+    --man
+        Show this manual page.
+
+EXAMPLES
+    check_password.sh
+        Start the password checker.
+
+    check_password.sh --debug
+        Run with debug enabled.
+
+    check_password.sh --nolog
+        Run without writing to logfile.
+
+EXIT STATUS
+    0 Successful execution
+    1 Invalid option or error during execution
+
+FILES
+    $HOME/password_checker.log
+        Log file used for script events
+
+    /usr/share/wordlist/rockyou.txt
+        Local wordlist used for password comparision
+
+SEE ALSO
+    sha1sum(1), curl(1)
+
+AUTHOR
+    Johan
+
+VERSION 
+    1.0
+
+EOF
+
+}
 
 # ==== Arguments ====
 if [[ $# -gt 0  ]]; then 
@@ -49,6 +113,10 @@ if [[ $# -gt 0  ]]; then
            show_version
            exit 0
            ;;
+       --man) 
+           show_man
+           exit 0
+           ;;
        --nolog)
            NOLOG=true
            echo "[INFO] Logging disabled"
@@ -59,7 +127,7 @@ if [[ $# -gt 0  ]]; then
            ;;
        *) echo "Unknown option: $1"
           echo "Use --help for usage information"
-4            exit 1
+          exit 1
           ;;
     esac
 fi
@@ -101,7 +169,7 @@ log_event() {
 log_event "INFO" "SCRIPT STARTED"
 
 # ==== Environment check ====
-# Check that OS is Linux
+# Check that OS is Linux, exit otherwise
 if [[ "$(uname -s)" != "Linux" ]]; then
     echo "Error: Thiws script must be run on Linux."
     log_event "ERROR" "Script is not running on Linux"
@@ -115,14 +183,14 @@ if ! curl -s --head https://api.pwnedpasswords.com > /dev/null; then
     exit 1
 fi
 
-# ==== Check that wordlist is available ====
+# ==== Check that wordlist is available, warning to user if it is not available ====
 Wordlist="/usr/share/wordlists/rockyou.txt"
 if [[ ! -f "$Wordlist" ]]; then # Check if file is available
     echo "WARNING: rockyou.txt is not found, local wordlist check is not available."
     log_event "WARNING" "rockyou.txt is missing"
 fi
 
-# ==== Check so script is not running as root ====
+# ==== Check so script is not running as root, if so warning to user  ====
 
 if [[ "$EUID" -eq 0 ]]; then
     echo "WARNING: Script is running as root. This is not recommended."
@@ -254,7 +322,7 @@ while true; do
         log_event "ERROR" "Online leak check failed"
     else 
         echo "Password is approved."
-        log_event "ERROR" "Password is approved"
+        log_event "INFO" "Password is approved"
         break # Finishes the script once the password is approved
     fi
 
@@ -272,19 +340,15 @@ while true; do
            echo "Exiting"
            exit 0
            ;;
-        *) 
+        *)
            log_event "WARNING" "Invalid menu selection"
            echo "Invalid option. Exiting."
            exit 1
            ;;
 
-        
-   
-   esac
+
+   esac # finish case structure
 done
 
-   
-    
 
 
- 
