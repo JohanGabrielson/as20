@@ -7,12 +7,15 @@ YELLOW="\033[33m"
 BLUE="\033[34m"
 MAGENTA="\033[35m"
 CYAN="\033[36m"
+RESET="\033[0m"
 
 # ====Log / print functions  ====
 info()    { echo -e "${CYAN}[INFO]${RESET} $1"; }
 success() { echo -e "${GREEN}[OK]${RESET} $1"; }
 warn()    { echo -e "${YELLOW}[WARNING]${RESET} $1"; }
 error()   { echo -e "${RED}[ERROR]${RESET} $1"; }
+debug()   { [[ $DEBUG == true ]] && echo -e "${MAGENTA}[DEBUG]${RESET} $1"; }
+
 
 
 # ==== Version info  ====
@@ -137,22 +140,42 @@ if [[ $# -gt 0  ]]; then
            ;;
        --debug)
            DEBUG=true
-           info "[DEBUG] Debug mode enabled"
+           debug "[DEBUG] Debug mode enabled"
            ;;
-       *) echo "Unknown option: $1"
+       *) error "Unknown option: $1"
           echo "Use --help for usage information"
           exit 1
           ;;
     esac
 fi
 
-# ==== Debug  ====
-debug() {
-    if [[ "$DEBUG" == true ]]; then
-        info "[DEBUG] $1"
+# ==== Header  =====
 
-    fi
+show_header() { 
+    local now=$(date "+%Y-%m-%d %H:%M:%S")
+
+    echo -e "${MAGENTA}"
+    echo "┌──────────────────────────────────────────────┐"
+    echo "│        PASSWORD SECURITY CHECKER             │"
+    echo "------------------------------------------------"
+    echo "   Version : $SCRIPT_VERSION"
+    echo "   Author  : $SCRIPT_AUTHOR"
+    echo "   Date    : $now"
+    echo "------------------------------------------------"
+    echo -e "${RESET}"
+
 }
+
+show_header
+
+
+## ==== Debug  ====
+#debug() {
+ #   if [[ "$DEBUG" == true ]]; then
+   #     info "[DEBUG] $1"
+
+  #  fi
+#}
 
 #=== Logging ====
 
@@ -319,6 +342,7 @@ check_online_leak() {
 }
 
 # ==== MAIN ====
+
 
 while true; do
 
