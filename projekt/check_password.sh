@@ -154,17 +154,18 @@ fi
 show_header() { 
     local now=$(date "+%Y-%m-%d %H:%M:%S")
 
-    echo -e "${MAGENTA}"
+        echo -e "${MAGENTA}"
     echo "┌──────────────────────────────────────────────┐"
     echo "│              PASSWORD SECURITY CHECKER       │"
     echo "├──────────────────────────────────────────────┤"
 
-    printf                "Version : $SCRIPT_VERSION     
-    printf                "Author  : $SCRIPT_AUTHOR      
-    printf                "Date    : $now                
-                                                   
+    printf "│  %-43s │\n" "Version : $SCRIPT_VERSION"
+    printf "│  %-43s │\n" "Author  : $SCRIPT_AUTHOR"
+    printf "│  %-43s │\n" "Date    : $now"
+
     echo "└──────────────────────────────────────────────┘"
     echo -e "${RESET}"
+
 
 }
 
