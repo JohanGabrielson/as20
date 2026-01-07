@@ -1,6 +1,7 @@
 #!/bin/bash
 
 
+
 # ==== Version info  ====
 SCRIPT_VERSION="1.0"
 SCRIPT_AUTHOR="Johan"
@@ -312,6 +313,13 @@ while true; do
     read -s -p  "Enter a password to check: " password
     echo "" 
     log_event "INFO" "Password check initiated."
+
+    # Checks for empty password
+    if [[ -z "$password"  ]]; then
+        echo "Password cannot be empty. Please try again."
+        log_event "ERROR" "Empty password entered"
+        continue
+    fi
     
 
     if ! check_length_and_complexity "$password"; then
