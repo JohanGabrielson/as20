@@ -1,5 +1,18 @@
 #!/bin/bash
 
+# ==== Color codes =====
+RED="\033[31m"
+GREEN="\033[32m"
+YELLOW="\033[33m"
+BLUE="\033[34m"
+MAGENTA="\033[35m"
+CYAN="\033[36m"
+
+# ====Log / print functions  ====
+info()    { echo -e "${CYAN}[INFO]${RESET} $1"; }
+success() { echo -e "${GREEN}[OK]${RESET} $1"; }
+warn()    { echo -e "${YELLOW}[WARNING]${RESET} $1"; }
+error()   { echo -e "${RED}[ERROR]${RESET} $1"; }
 
 
 # ==== Version info  ====
@@ -120,11 +133,11 @@ if [[ $# -gt 0  ]]; then
            ;;
        --nolog)
            NOLOG=true
-           echo "[INFO] Logging disabled"
+           info "[INFO] Logging disabled"
            ;;
        --debug)
            DEBUG=true
-           echo "[DEBUG] Debug mode enabled"
+           info "[DEBUG] Debug mode enabled"
            ;;
        *) echo "Unknown option: $1"
           echo "Use --help for usage information"
@@ -136,7 +149,7 @@ fi
 # ==== Debug  ====
 debug() {
     if [[ "$DEBUG" == true ]]; then
-        echo "[DEBUG] $1"
+        info "[DEBUG] $1"
 
     fi
 }
@@ -172,14 +185,14 @@ log_event "INFO" "SCRIPT STARTED"
 # ==== Environment check ====
 # Check that OS is Linux, exit otherwise
 if [[ "$(uname -s)" != "Linux" ]]; then
-    echo "Error: Thiws script must be run on Linux."
+    error "Error: Thiws script must be run on Linux."
     log_event "ERROR" "Script is not running on Linux"
     exit 1
 fi
 
 # ==== Check Internet connection ====
 if ! curl -s --head https://api.pwnedpasswords.com > /dev/null; then
-    echo "ERROR" "No Internet connection: Can't check for online leaks."
+    error "ERROR" "No Internet connection: Can't check for online leaks."
     log_event "ERROR" "No Internet connection" 
     exit 1
 fi
@@ -187,14 +200,14 @@ fi
 # ==== Check that wordlist is available, warning to user if it is not available ====
 Wordlist="/usr/share/wordlists/rockyou.txt"
 if [[ ! -f "$Wordlist" ]]; then # Check if file is available
-    echo "WARNING: rockyou.txt is not found, local wordlist check is not available."
+    warn "WARNING: rockyou.txt is not found, local wordlist check is not available."
     log_event "WARNING" "rockyou.txt is missing"
 fi
 
 # ==== Check so script is not running as root, if so warning to user  ====
 
 if [[ "$EUID" -eq 0 ]]; then
-    echo "WARNING: Script is running as root. This is not recommended."
+    warn "WARNING: Script is running as root. This is not recommended."
     log_event "WARNING" "Script is running as root"
 fi
 
@@ -214,7 +227,7 @@ check_length_and_complexity() {
     # Checks password length
     if [[ ${#pw} -lt 8 ]]; then
         debug "Password too short: ${#pw} characters" 
-        echo "Password is too short (min 8 characters)"
+        error "Password is too short (min 8 characters)"
         log_event "ERROR" "Password is too short"
         return 1
     fi
@@ -223,7 +236,7 @@ check_length_and_complexity() {
     if ! [[ "$pw" =~ [A-Z] && "$pw" =~ [a-z] && "$pw" =~ [0-9] ]]; then
         debug "Password failed complexity check"
         log_event "ERROR" "Password lacks complexity"
-        echo "Password lacks complexity (must include capital lettes, lowercase and digits)"
+        error "Password lacks complexity (must include capital lettes, lowercase and digits)"
         return 1
     fi
   
@@ -231,7 +244,7 @@ check_length_and_complexity() {
     if ! [[ "$pw" =~ [^A-Za-z0-9] ]]; then
         debug "Password missing special character"
         log_event "ERROR" "Password missing special character"
-        echo "Password must include one special character"
+        error "Password must include one special character"
         return 1
     fi
 
@@ -260,7 +273,7 @@ check_local_wordlist() {
     if grep -Fxq "$pw" "$wordlist"; then
         debug "Password found in rockyou.txt"
         log_event "WARNING" "Password is listed in rockyou.txt"
-        echo "Password is listed in  rockyou.txt - choose another."
+        warn "Password is listed in  rockyou.txt - choose another."
         return 1
     fi
     debug "Password not found in rockyou.txt"
@@ -297,7 +310,7 @@ check_online_leak() {
     # Check if it is available in the API response
     if echo "$response" | grep -q "^$suffix:"; then
         debug "haveibeenpwned match found for suffix: $suffix"
-        echo "Password has occured in leaks - choose another."
+        warn "Password has occured in leaks - choose another."
         return 1
     fi
     debug "No match found in haveibeenpwned respose"
@@ -316,7 +329,7 @@ while true; do
 
     # Checks for empty password or spaces
     if [[ -z "$password" || "$password" =~ ^[[:space:]]+$  ]]; then
-        echo "Password cannot be empty or only spaces. Please try again."
+        error "Password cannot be empty or only spaces. Please try again."
         log_event "ERROR" "Empty or whitespace-only password entered"
         continue
     fi
@@ -331,7 +344,7 @@ while true; do
     elif ! check_online_leak "$password"; then
         log_event "ERROR" "Online leak check failed"
     else 
-        echo "Password is approved."
+        success "Password is approved."
         log_event "INFO" "Password is approved"
         break # Finishes the script once the password is approved
     fi
@@ -359,6 +372,4 @@ while true; do
 
    esac # finish case structure
 done
-
-
 
