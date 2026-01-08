@@ -172,14 +172,6 @@ show_header() {
 show_header
 
 
-## ==== Debug  ====
-#debug() {
- #   if [[ "$DEBUG" == true ]]; then
-   #     info "[DEBUG] $1"
-
-  #  fi
-#}
-
 #=== Logging ====
 
 # Logfile path
@@ -211,17 +203,26 @@ log_event "INFO" "SCRIPT STARTED"
 # ==== Environment check ====
 # Check that OS is Linux, exit otherwise
 if [[ "$(uname -s)" != "Linux" ]]; then
-    error "Error: Thiws script must be run on Linux."
+    error "Error: This script must be run on Linux."
     log_event "ERROR" "Script is not running on Linux"
     exit 1
 fi
 
-# ==== Check Internet connection ====
-if ! curl -s --head https://api.pwnedpasswords.com > /dev/null; then
-    error "ERROR" "No Internet connection: Can't check for online leaks."
-    log_event "ERROR" "No Internet connection" 
+# Check that curl is installed
+if ! command -v curl >/dev/null 2>&1; then
+    error "Error: curl is not installed. Please install curl and try again. You will now exit"
+    log_event "ERROR" "Curl not available"
     exit 1
 fi
+ 
+
+# ==== Check Internet connection ====
+if ! ping -c 1.1.1.1 >/dev/null 2>&1; then  # ping cloudfare to check connection
+    error "Error: No internet connection. You will now exit."
+    log_event "ERROR" "No Internet connection"
+    exit 1
+fi
+ 
 
 # ==== Check that wordlist is available, warning to user if it is not available ====
 Wordlist="/usr/share/wordlists/rockyou.txt"
@@ -308,7 +309,6 @@ check_local_wordlist() {
 }
 
 # ==== Function: Check online leaks  ====
-# ====           =====
 # ==== Purpose: Check if password is in known dataleaks 
 # ==== ======== ====
 check_online_leak() {
@@ -378,7 +378,7 @@ while true; do
 
     # Check if the user wants to try again
     echo ""
-    read -p "Do you want to try another password? (y/n):" choice
+    read -p "Do you want to try another password? Select no (n) to exit (y/n):" choice
 
     case "$choice" in
         y|Y)
@@ -392,8 +392,7 @@ while true; do
            ;;
         *)
            log_event "WARNING" "Invalid menu selection"
-           echo "Invalid option. Exiting."
-           exit 1
+           echo "Invalid option. Try again (y/n):"
            ;;
 
 
