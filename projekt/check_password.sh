@@ -130,21 +130,6 @@ if [[ $# -gt 0  ]]; then
            show_version
            exit 0
            ;;
-if [[ "$password" != "$password_confirmed" ]]; then
-        error "Passwords are not matching. Please try again."
-        log_event "Passwords are not matching"
-        continue
-    fi
-
-    echo "" 
-    log_event "INFO" "Password check initiated."
-
-    # Checks for empty password or spaces
-    if [[ -z "$password" || "$password" =~ ^[[:space:]]+$  ]]; then
-        error "Password cannot be empty or only spaces. Please try again."
-        log_event "ERROR" "Empty or whitespace-only password entered"
-        continue
-    fi
        --man) 
            show_man
            exit 0
@@ -399,7 +384,7 @@ check_online_leak() {
 
 while true; do
     
-   prompt_password()
+   prompt_password
     
     if ! check_length_and_complexity "$password"; then
         log_event "ERROR" "Complexity check failed"
