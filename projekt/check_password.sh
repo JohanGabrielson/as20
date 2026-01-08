@@ -349,8 +349,21 @@ check_online_leak() {
 
 while true; do
 
-    # -s makes the characters hidden when entered
-    read -s -p  "Enter a password to check: " password
+    
+    echo -n  "Enter a password to check: "
+    read -s password
+    echo ""
+    echo -n  "Confirm password: "
+    read -s password_confirmed
+  
+    echo ""
+    
+    if [[ "$password" != "$password_confirmed" ]]; then
+        error "Passwords are not matching."
+        log_event "Passwords are not matching"
+        continue
+    fi
+
     echo "" 
     log_event "INFO" "Password check initiated."
 
