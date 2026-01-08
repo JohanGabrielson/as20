@@ -254,6 +254,24 @@ prompt_password() {
             continue
         fi
 
+        # confirm password
+        echo -n "Confirm password: "
+        read -s password_confirmed
+        echo ""
+
+        #check empty confirm
+        if [[ -z "$password_confirmed" || "$password_confirmed" =~ ^[[:space:]]+$  ]]; then
+            error "Password confirmation cannot be empty or only spaces. Please try again."
+            log_event "ERROR" "Empty or whitespace-only confirmation entered"
+            continue
+        fi
+
+    #Check match
+        if [[ "$password" != "$password_confirmed" ]]; then
+            error "Passwords are not matching. Please try again."
+            log_event "ERROR" "Passwords are not matching"
+            continue
+        fi
         break
 
     done
