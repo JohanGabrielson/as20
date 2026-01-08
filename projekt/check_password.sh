@@ -300,7 +300,7 @@ check_local_wordlist() {
     if grep -Fxq "$pw" "$wordlist"; then
         debug "Password found in rockyou.txt"
         log_event "WARNING" "Password is listed in rockyou.txt"
-        warn "Password is listed in  rockyou.txt - choose another."
+        warn "Password is listed in  rockyou.txt - You should choose another."
         return 1
     fi
     debug "Password not found in rockyou.txt"
@@ -336,7 +336,7 @@ check_online_leak() {
     # Check if it is available in the API response
     if echo "$response" | grep -q "^$suffix:"; then
         debug "haveibeenpwned match found for suffix: $suffix"
-        warn "Password has occured in leaks - choose another."
+        warn "Password has occured in leaks - You should choose another."
         return 1
     fi
     debug "No match found in haveibeenpwned respose"
@@ -348,9 +348,21 @@ check_online_leak() {
 
 
 while true; do
+    # Ask user to enter password + confirm password, loop if no match
+    echo -n  "Enter a password to check: "
+    read -s password
+    echo ""
+    echo -n  "Confirm password: "
+    read -s password_confirmed
+  
+    echo ""
+    
+    if [[ "$password" != "$password_confirmed" ]]; then
+        error "Passwords are not matching. Please try again."
+        log_event "Passwords are not matching"
+        continue
+    fi
 
-    # -s makes the characters hidden when entered
-    read -s -p  "Enter a password to check: " password
     echo "" 
     log_event "INFO" "Password check initiated."
 
