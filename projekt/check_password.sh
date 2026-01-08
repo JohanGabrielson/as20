@@ -341,7 +341,7 @@ check_online_leak() {
     fi
     debug "No match found in haveibeenpwned respose"
     log_event "INFO" "Password not found in online leaks."
-    return 0 #Password is not in leak
+    return 0 
 }
 
 # ==== MAIN ====
@@ -373,7 +373,7 @@ while true; do
     else 
         success "Password is approved."
         log_event "INFO" "Password is approved"
-        break # Finishes the script once the password is approved
+        break 
     fi
 
     # Check if the user wants to try again
@@ -396,6 +396,6 @@ while true; do
            ;;
 
 
-   esac # finish case structure
+   esac 
 done
 
