@@ -130,6 +130,21 @@ if [[ $# -gt 0  ]]; then
            show_version
            exit 0
            ;;
+if [[ "$password" != "$password_confirmed" ]]; then
+        error "Passwords are not matching. Please try again."
+        log_event "Passwords are not matching"
+        continue
+    fi
+
+    echo "" 
+    log_event "INFO" "Password check initiated."
+
+    # Checks for empty password or spaces
+    if [[ -z "$password" || "$password" =~ ^[[:space:]]+$  ]]; then
+        error "Password cannot be empty or only spaces. Please try again."
+        log_event "ERROR" "Empty or whitespace-only password entered"
+        continue
+    fi
        --man) 
            show_man
            exit 0
@@ -238,6 +253,26 @@ if [[ "$EUID" -eq 0 ]]; then
     log_event "WARNING" "Script is running as root"
 fi
 
+# ==== Prompt password, check for empty spaces =====
+prompt_password() {
+    while true; do
+        echo -n  "Enter a password to check: "
+        read -s password
+        echo ""
+
+        log_event "INFO" "Password check initiated."
+
+        # Checks for empty password or spaces
+        if [[ -z "$password" || "$password" =~ ^[[:space:]]+$  ]]; then
+            error "Password cannot be empty or only spaces. Please try again."
+            log_event "ERROR" "Empty or whitespace-only password entered"
+            continue
+        fi
+
+        break
+
+    done
+}
 
 # ==== Function: Check complexity and length  ====
 # ====            =====
@@ -253,7 +288,22 @@ check_length_and_complexity() {
     log_event "INFO" "Checking password length and complexity"
     # Checks password length
     if [[ ${#pw} -lt 8 ]]; then
-        debug "Password too short: ${#pw} characters" 
+        debug "Passw if [[ "$password" != "$password_confirmed" ]]; then
+        error "Passwords are not matching. Please try again."
+        log_event "Passwords are not matching"
+        continue
+    fi
+
+    echo "" 
+    log_event "INFO" "Password check initiated."
+
+    # Checks for empty password or spaces
+    if [[ -z "$password" || "$password" =~ ^[[:space:]]+$  ]]; then
+        error "Password cannot be empty or only spaces. Please try again."
+        log_event "ERROR" "Empty or whitespace-only password entered"
+        continue
+    fi
+ord too short: ${#pw} characters" 
         error "Password is too short (min 8 characters)"
         log_event "ERROR" "Password is too short"
         return 1
@@ -348,34 +398,9 @@ check_online_leak() {
 
 
 while true; do
-    # Ask user to enter password + confirm password, loop if no match
-    echo -n  "Enter a password to check: "
-    read -s password
-    echo ""
-    echo -n  "Confirm password: "
-    read -s password_confirmed
-  
-    echo ""
     
-    if [[ "$password" != "$password_confirmed" ]]; then
-        error "Passwords are not matching. Please try again."
-        log_event "Passwords are not matching"
-        continue
-    fi
-
-    echo "" 
-    log_event "INFO" "Password check initiated."
-
-    # Checks for empty password or spaces
-    if [[ -z "$password" || "$password" =~ ^[[:space:]]+$  ]]; then
-        error "Password cannot be empty or only spaces. Please try again."
-        log_event "ERROR" "Empty or whitespace-only password entered"
-        continue
-    fi
-
+   prompt_password()
     
-    
-
     if ! check_length_and_complexity "$password"; then
         log_event "ERROR" "Complexity check failed"
     elif ! check_local_wordlist "$password"; then
