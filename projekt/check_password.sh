@@ -203,7 +203,7 @@ log_event "INFO" "SCRIPT STARTED"
 # ==== Environment check ====
 # Check that OS is Linux, exit otherwise
 if [[ "$(uname -s)" != "Linux" ]]; then
-    error "Error: This script must be run on Linux."
+    error "Error: This script must be run on Linux. You will now exit."
     log_event "ERROR" "Script is not running on Linux"
     exit 1
 fi
@@ -217,7 +217,7 @@ fi
  
 
 # ==== Check Internet connection ====
-if ! ping -c 1.1.1.1 >/dev/null 2>&1; then  # ping cloudfare to check connection
+if ! curl -s https://www.google.com >/dev/null; then  
     error "Error: No internet connection. You will now exit."
     log_event "ERROR" "No Internet connection"
     exit 1
