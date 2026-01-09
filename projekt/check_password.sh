@@ -394,7 +394,7 @@ check_online_leak() {
 
 while true; do
     
-   prompt_password
+    prompt_password
     
     if ! check_length_and_complexity "$password"; then
         log_event "ERROR" "Complexity check failed"
@@ -408,26 +408,30 @@ while true; do
         break 
     fi
 
-    # Check if the user wants to try again
     echo ""
-    read -p "Do you want to try another password? Select no (n) to exit (y/n):" choice
 
-    case "$choice" in
-        y|Y)
-           log_event "INFO" "User chose to try again"
-           echo ""
-           ;;
-        n|N)
-           log_event "INFO" "User chose to exit script"
-           echo "Exiting"
-           exit 0
-           ;;
-        *)
-           log_event "WARNING" "Invalid menu selection"
-           echo "Invalid option. Try again (y/n):"
-           ;;
+    # Check if the user wants to try again
+    while true; do
 
+        read -p "Do you want to try another password? Select no (n) to exit (y/n):" choice
 
-   esac 
+        case "$choice" in
+            y|Y)
+               log_event "INFO" "User chose to try again"
+               echo ""
+               continue 2 #Move to start of mainloop
+               ;;
+            n|N)
+               log_event "INFO" "User chose to exit script"
+               echo "Exiting"
+               exit 0
+               ;;
+            *)
+               log_event "WARNING" "Invalid menu selection"
+               echo "Invalid option:"
+               ;;
+        esac
+    done
+   
 done
 
