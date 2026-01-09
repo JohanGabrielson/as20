@@ -287,10 +287,10 @@ check_length_and_complexity() {
     log_event "INFO" "Checking password length and complexity"
     # Checks password length
     if [[ ${#pw} -lt 8 ]]; then
-        debug "Passw if [[ "$password" != "$password_confirmed" ]]; then
-        error "Passwords are not matching. Please try again."
-        log_event "Passwords are not matching"
-        continue
+        
+        error "Password is too short. Must be at least 8 characters."
+        log_event "ERROR" "Passwords is too short"
+        return 1
     fi
 
     echo "" 
@@ -300,13 +300,9 @@ check_length_and_complexity() {
     if [[ -z "$password" || "$password" =~ ^[[:space:]]+$  ]]; then
         error "Password cannot be empty or only spaces. Please try again."
         log_event "ERROR" "Empty or whitespace-only password entered"
-        continue
-    fi
-ord too short: ${#pw} characters" 
-        error "Password is too short (min 8 characters)"
-        log_event "ERROR" "Password is too short"
         return 1
     fi
+
 
     # Checks that password contain A-Z, a-z, 0-9
     if ! [[ "$pw" =~ [A-Z] && "$pw" =~ [a-z] && "$pw" =~ [0-9] ]]; then
