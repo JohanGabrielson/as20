@@ -22,6 +22,8 @@ debug()   { [[ $DEBUG == true ]] && echo -e "${MAGENTA}[DEBUG]${RESET} $1"; }
 SCRIPT_VERSION="1.0"
 SCRIPT_AUTHOR="Johan"
 
+./check_password.sh: line 353: syntax error near unexpected token `fi'
+./check_password.sh: line 353: `    fi'
 NOLOG=false
 DEBUG=false
 
@@ -200,6 +202,49 @@ log_event() {
 
 log_event "INFO" "SCRIPT STARTED"
 
+# ==== Normalize password =====
+
+normalize_password() {
+    local pw="$1"
+    pw=$(echo "$pw" | tr '[:upper:]'  '[:lower:]') 
+    pw=$(echo "$pw" | sed 's/[^a-z0-9//g')
+    echo "$pw"
+}
+
+check_fuzzy_wordlist() {
+    local pw="$1"
+    local pw_norm
+    pw_norm=$(normalize_password "$pw")
+
+    # Skip check if password is less than 7 characters
+    if [[ ${#pw_norm} -lt 7 ]]; then
+        return 0
+    fi 
+    
+    local wordlist="/usr/share/wordlists/rockyou.txt"
+
+    while read -r word; do
+        # normalize rockyou word
+        local word_norm
+        word_norm=$(normalize_password "$word")
+
+        # skip short words
+        if [[ ${#word_norm} -lt 7  ]]; then
+            continue
+        fi
+
+        # match substring 
+        if [[ "$pw_norm" == *"$word_norm"* ]]; then
+            warn "Password is similar to a common leaked password: $word"
+            log_event "WARNING" "Password similar to leaked word: $word"
+            return 1
+        fi
+    done < "$wordlist"
+    return 0    
+   
+
+}
+
 # ==== Environment check ====
 # Check that OS is Linux, exit otherwise
 if [[ "$(uname -s)" != "Linux" ]]; then
@@ -280,59 +325,52 @@ prompt_password() {
 # ==== Function: Check complexity and length  ====
 # ====            =====
 # ==== Purpose: check that password has       ====
-# ==== a sufficient length and contains a digit
+# ==== a sufficient length and contains a digit, special character and is not blank
 # ==== ======== =====
+
+
 check_length_and_complexity() {
-    local pw="$1" # Takes password as first argument 
-    
+    local pw="$1"
+
+    log_event "INFO" "Password check initiated."
     debug "Starting complexity check"
     debug "Password length: ${#pw}"
-
     log_event "INFO" "Checking password length and complexity"
-    # Checks password length
-    if [[ ${#pw} -lt 8 ]]; then
-        debug "Passw if [[ "$password" != "$password_confirmed" ]]; then
-        error "Passwords are not matching. Please try again."
-        log_event "Passwords are not matching"
-        continue
-    fi
 
-    echo "" 
-    log_event "INFO" "Password check initiated."
-
-    # Checks for empty password or spaces
-    if [[ -z "$password" || "$password" =~ ^[[:space:]]+$  ]]; then
+    # Check empty or whitespace-only password
+    if [[ -z "$pw" || "$pw" =~ ^[[:space:]]+$ ]]; then
         error "Password cannot be empty or only spaces. Please try again."
         log_event "ERROR" "Empty or whitespace-only password entered"
-        continue
+        return 1
     fi
-ord too short: ${#pw} characters" 
+
+    # Check password length
+    if [[ ${#pw} -lt 8 ]]; then
+        debug "Password is too short: ${#pw} characters"
         error "Password is too short (min 8 characters)"
         log_event "ERROR" "Password is too short"
         return 1
     fi
 
-    # Checks that password contain A-Z, a-z, 0-9
+    # Check for uppercase, lowercase and digits
     if ! [[ "$pw" =~ [A-Z] && "$pw" =~ [a-z] && "$pw" =~ [0-9] ]]; then
         debug "Password failed complexity check"
         log_event "ERROR" "Password lacks complexity"
-        error "Password lacks complexity (must include capital lettes, lowercase and digits)"
+        error "Password lacks complexity (must include uppercase, lowercase and digits)"
         return 1
     fi
-  
-    # Special characters
+
+    # Check for special characters
     if ! [[ "$pw" =~ [^A-Za-z0-9] ]]; then
         debug "Password missing special character"
         log_event "ERROR" "Password missing special character"
-        error "Password must include one special character"
+        error "Password must include at least one special character"
         return 1
     fi
 
-
     debug "Password passed complexity check"
-    # Save to logfile
-    log_event "INFO" "Password complexity and length OK" 
-    return 0 # All ok, criteria is met
+    log_event "INFO" "Password complexity and length OK"
+    return 0
 }
 
 # ==== Function: Check wordlist  =====
@@ -408,6 +446,8 @@ while true; do
         log_event "ERROR" "Complexity check failed"
     elif ! check_local_wordlist "$password"; then
         log_event "ERROR" "Wordlist check failed"
+    elif ! check_fuzzy_wordlist "$password"; then
+        log_event "WARNING" "Password similar to leaked passwords"
     elif ! check_online_leak "$password"; then
         log_event "ERROR" "Online leak check failed"
     else 
