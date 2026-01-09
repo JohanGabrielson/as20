@@ -31,7 +31,7 @@ show_help() {
     echo ""
     echo "This script checks password strength, compares against rockyou.txt and checks if the  password is in known data breaches."
     echo ""
-    echo "Usage $0 [OPTONS]"
+    echo "Usage $0 [OPTIONS]"
     echo ""
     echo "Options:"
     echo " -h,  --help      Show this help message and exit" 
@@ -77,7 +77,7 @@ OPTIONS
         Show version and author info.
 
     --nolog
-        Disavble logging to file.
+        Disable logging to file.
 
     --debug
         Enable verbose debug output.
