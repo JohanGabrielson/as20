@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 # ==== Color codes =====
 RED="\033[31m"
 GREEN="\033[32m"
@@ -31,7 +32,7 @@ show_help() {
     echo ""
     echo "This script checks password strength, compares against rockyou.txt and checks if the  password is in known data breaches."
     echo ""
-    echo "Usage $0 [OPTONS]"
+    echo "Usage $0 [OPTIONS]"
     echo ""
     echo "Options:"
     echo " -h,  --help      Show this help message and exit" 
@@ -100,7 +101,7 @@ EXIT STATUS
     1 Invalid option or error during execution
 
 FILES
-    $HOME/password_checker.log
+    ~/password_checker.log
         Log file used for script events
 
     /usr/share/wordlist/rockyou.txt
@@ -174,14 +175,27 @@ show_header
 
 #=== Logging ====
 
+# Directory where this script is located
+ScriptDir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+
+
 # Logfile path
-Logfile="$HOME/password_checker.log"
+Logfile="$ScriptDir/password_checker.log"
 
 # Create logfile if it does not exist and add permissions
 if [[ ! -f "$Logfile" ]]; then
-    sudo touch "$Logfile"
-    sudo chmod 644 "$Logfile"
+    touch "$Logfile"
+    chmod 666 "$Logfile"
 fi
+
+
+
+# Create logfile if it does not exist and add permissions
+#if [[ ! -f "$Logfile" ]]; then
+ #   sudo touch "$Logfile"
+  #  sudo chmod 644 "$Logfile"
+#fi
 
 log_event() {
     local level="$1"
