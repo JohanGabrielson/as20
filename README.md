@@ -1,6 +1,3 @@
-┌──────────────────────────────────────────────┐
-│          PASSWORD SECURITY CHECKER           │
-└──────────────────────────────────────────────┘
 
 ### Password Security Checker ###
 
@@ -26,6 +23,11 @@
 git clone https://github.com/JohanGabrielson/as20/
 cd as20/projekt
 chmod +x check_password.sh
+
+## 🔐 Permission ##
+- To run the script: chmod +x check_password.sh
+The program will automatically create a log file, permissions are set to be read and write by all users (sudo not needed):
+-rw-rw-rw- 1 user user password_checker.log
 
 ## ▶️ Usage ##
 - Run by command: ./check_password.sh
