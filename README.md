@@ -1,6 +1,14 @@
 
 ### Password Security Checker ###
 
+
+## Example ##
+
+<img width="1967" height="958" alt="Skärmbild 2026-01-09 140415" src="https://github.com/user-attachments/assets/2441d92f-dca0-42c8-8adc-4aec1f428d7d" />
+
+
+
+
 ## 📌 Functionality ¤¤¤
 - Length: min 8 characters
 - Complexity: Uppercase, lowercase, special character and digit(s)
@@ -29,6 +37,13 @@ chmod +x check_password.sh
 The program will automatically create a log file, permissions are set to be read and write by all users (sudo not needed):
 -rw-rw-rw- 1 user user password_checker.log
 
+Script will attempt to read /usr/share/wordlists/rockyou.txt
+run command: sudo gzip -d /usr/share/wordlists/rockyou.txt.gz 2>/dev/null
+This will unpack the txt-file, which will make the script run as intended.
+
+
+
+
 ## ▶️ Usage ##
 - Run by command: ./check_password.sh
 
@@ -49,8 +64,4 @@ Logs:
 - WARNING
 - ERROR
 - DEBUG (if enabled)
-
-## Permissions ##
-
-
 
