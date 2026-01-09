@@ -22,8 +22,6 @@ debug()   { [[ $DEBUG == true ]] && echo -e "${MAGENTA}[DEBUG]${RESET} $1"; }
 SCRIPT_VERSION="1.0"
 SCRIPT_AUTHOR="Johan"
 
-./check_password.sh: line 353: syntax error near unexpected token `fi'
-./check_password.sh: line 353: `    fi'
 NOLOG=false
 DEBUG=false
 
@@ -114,7 +112,7 @@ SEE ALSO
 AUTHOR
     Johan
 
-VERSION 
+VERSION
     1.0
 
 EOF
@@ -122,7 +120,7 @@ EOF
 }
 
 # ==== Arguments ====
-if [[ $# -gt 0  ]]; then 
+if [[ $# -gt 0  ]]; then
     case "$1" in
        -h|--help)
            show_help
@@ -132,7 +130,7 @@ if [[ $# -gt 0  ]]; then
            show_version
            exit 0
            ;;
-       --man) 
+       --man)
            show_man
            exit 0
            ;;
@@ -181,8 +179,8 @@ Logfile="$HOME/password_checker.log"
 
 # Create logfile if it does not exist and add permissions
 if [[ ! -f "$Logfile" ]]; then
-    sudo touch "$Logfile"
-    sudo chmod 644 "$Logfile"
+    touch "$Logfile"
+    chmod 644 "$Logfile"
 fi
 
 log_event() {
@@ -207,7 +205,7 @@ log_event "INFO" "SCRIPT STARTED"
 normalize_password() {
     local pw="$1"
     pw=$(echo "$pw" | tr '[:upper:]'  '[:lower:]') 
-    pw=$(echo "$pw" | sed 's/[^a-z0-9//g')
+    pw=$(echo "$pw" | sed 's/[^a-z0-9]//g')
     echo "$pw"
 }
 
@@ -221,7 +219,7 @@ check_fuzzy_wordlist() {
         return 0
     fi 
     
-    local wordlist="/usr/share/wordlists/rockyou.txt"
+    local Wordlist="/usr/share/wordlists/rockyou.txt"
 
     while read -r word; do
         # normalize rockyou word
@@ -239,7 +237,7 @@ check_fuzzy_wordlist() {
             log_event "WARNING" "Password similar to leaked word: $word"
             return 1
         fi
-    done < "$wordlist"
+    done < "$Wordlist"
     return 0    
    
 
@@ -284,16 +282,17 @@ if [[ "$EUID" -eq 0 ]]; then
 fi
 
 # ==== Prompt password, check for empty spaces =====
+
 prompt_password() {
     while true; do
-        echo -n  "Enter a password to check: "
-        read -s password
+        echo -n "Enter a password to check: "
+        read password
         echo ""
 
         log_event "INFO" "Password check initiated."
 
         # Checks for empty password or spaces
-        if [[ -z "$password" || "$password" =~ ^[[:space:]]+$  ]]; then
+        if [[ -z "$password" || "$password" =~ ^[[:space:]]+$ ]]; then
             error "Password cannot be empty or only spaces. Please try again."
             log_event "ERROR" "Empty or whitespace-only password entered"
             continue
@@ -301,26 +300,27 @@ prompt_password() {
 
         # confirm password
         echo -n "Confirm password: "
-        read -s password_confirmed
+        read password_confirmed
         echo ""
 
-        #check empty confirm
-        if [[ -z "$password_confirmed" || "$password_confirmed" =~ ^[[:space:]]+$  ]]; then
+        # check empty confirm
+        if [[ -z "$password_confirmed" || "$password_confirmed" =~ ^[[:space:]]+$ ]]; then
             error "Password confirmation cannot be empty or only spaces. Please try again."
             log_event "ERROR" "Empty or whitespace-only confirmation entered"
             continue
         fi
 
-    #Check match
+        # Check match
         if [[ "$password" != "$password_confirmed" ]]; then
             error "Passwords are not matching. Please try again."
             log_event "ERROR" "Passwords are not matching"
             continue
         fi
-        break
 
+        break
     done
 }
+
 
 # ==== Function: Check complexity and length  ====
 # ====            =====
@@ -439,9 +439,9 @@ check_online_leak() {
 
 
 while true; do
-    
+
    prompt_password
-    
+
     if ! check_length_and_complexity "$password"; then
         log_event "ERROR" "Complexity check failed"
     elif ! check_local_wordlist "$password"; then
@@ -476,6 +476,8 @@ while true; do
            ;;
 
 
-   esac 
+   esac
 done
+
+
 
