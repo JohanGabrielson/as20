@@ -428,7 +428,7 @@ while true; do
                ;;
             *)
                log_event "WARNING" "Invalid menu selection"
-               echo "Invalid option:"
+               echo "Invalid option"
                ;;
         esac
     done
