@@ -1,5 +1,5 @@
 ┌──────────────────────────────────────────────┐
-│              PASSWORD SECURITY CHECKER       │
+│          PASSWORD SECURITY CHECKER           │
 └──────────────────────────────────────────────┘
 
 ### Password Security Checker ###
