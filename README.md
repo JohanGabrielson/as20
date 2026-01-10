@@ -22,9 +22,9 @@
 
 
 ## 📥 Installation 
+<pre>
 git clone https://github.com/JohanGabrielson/as20/
-
-<pre>cd as20/projekt
+cd as20/projekt
 chmod +x check_password.sh
 </pre>
 
@@ -54,7 +54,6 @@ This will unpack the txt-file, which will make the script run as intended.
 
 Example: 
 
-bash´´´
 <pre> ./check_password.sh --debug </pre>
 
 
