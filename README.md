@@ -50,6 +50,8 @@ This will unpack the txt-file, which will make the script run as intended.
 
 
 Example: 
+
+bash´´´
 ./check_password.sh --debug
 
 
