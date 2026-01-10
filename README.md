@@ -1,5 +1,6 @@
 
-# Password Security Checker
+# 🛡️ Password Security Checker
+
 
 ## 📌 Functionality 
 - Length: min 8 characters
@@ -12,10 +13,10 @@
 - Warning if run as root
 
 ## 🧩 Requirements
-- Linux (Script will terminate if != Linux)
+- Linux (Script will terminate if ≠ Linux)
 - curl
 - Internet connection
-- rockyou.txt (it has to be unpacked)
+- rockyou.txt (must be unpacked)
 
 
 
@@ -34,35 +35,53 @@ run command: sudo gzip -d /usr/share/wordlists/rockyou.txt.gz 2>/dev/null
 This will unpack the txt-file, which will make the script run as intended.
 
 
-
-
 ## ▶️ Usage 
 - Run by command: ./check_password.sh
 
-Available flags: -h, --help       Visa hjälp
--v, --version    Visa version och författare
---nolog          Inaktivera loggning
---debug          Aktivera debug‑läge
---man            Visa manual
+### Tillgängliga flaggor
+
+| Flag       | Function                    |
+|--------------|-----------------------------|
+| `-h`, `--help`     | Visa hjälptext             |
+| `-v`, `--version`  | Visa version och författare |
+| `--nolog`          | Inaktivera loggning        |
+| `--debug`          | Aktivera debug‑läge        |
+| `--man`            | Visa manual                |
+
 
 Example: 
 ./check_password.sh --debug
 
 
-## Logging 
+## 📄 Logging 
 Data is logged to password_checker.log in the same folder as the script is located in.
-Logs:
+Log levels:
 - INFO
 - WARNING
 - ERROR
 - DEBUG (if enabled)
 
 
-## Example 
+## 📸 Example Output
+<p align="center">
+<img width="1967" height="958" alt="Skärmbild 2026-01-09 140415" src="https://github.com/user-attachments/assets/2441d92f-dca0-42c8-8adc-4aec1f428d7d" /></p>
 
-<img width="1967" height="958" alt="Skärmbild 2026-01-09 140415" src="https://github.com/user-attachments/assets/2441d92f-dca0-42c8-8adc-4aec1f428d7d" />
 
-
-## Auhtor and version
+## 👤 Author and version
 Created by Johan, version 1.0
 
+## 📜 License and purpose
+This script was created for educational purposes within IT and Cybersecurity training.
+Free to use for anyone, anywhere, anytime.
+
+## ⚙️ How it works
+1. User enters input
+2. Script validates:
+- Length
+- Complexity
+- Whitespace
+3. Script checks:
+  - Local wordlist (rockyou.txt)
+  - Online leaks (HaveIBeenPwned API)
+4. Script logs all events
+5. User chooses to try again or exit
