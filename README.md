@@ -1,4 +1,8 @@
 
+┌──────────────────────────────────────────────┐
+│              PASSWORD SECURITY CHECKER       │
+└──────────────────────────────────────────────┘
+
 # 🛡️ Password Security Checker
 
 
@@ -22,10 +26,12 @@
 
 ## 📥 Installation 
 git clone https://github.com/JohanGabrielson/as20/
-cd as20/projekt
-chmod +x check_password.sh
 
-## 🔐 Permission ##
+<pre>´´´bash cd as20/projekt
+chmod +x check_password.sh
+</pre>
+
+## 🔐 Permissions 
 - To run the script: chmod +x check_password.sh
 The program will automatically create a log file, permissions are set to be read and write by all users (sudo not needed):
 -rw-rw-rw- 1 user user password_checker.log
@@ -87,3 +93,9 @@ Free to use for anyone, anywhere, anytime.
   - Online leaks (HaveIBeenPwned API)
 4. Script logs all events
 5. User chooses to try again or exit
+
+
+## ⚠️  Known limitations 
+- Requires Internet connection for HIBP check
+- rockyou.txt has to be manually unpacked
+- Script is designed for Linux only
