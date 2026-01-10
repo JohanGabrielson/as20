@@ -1,15 +1,7 @@
 
-### Password Security Checker ###
+# Password Security Checker
 
-
-## Example ##
-
-<img width="1967" height="958" alt="Skärmbild 2026-01-09 140415" src="https://github.com/user-attachments/assets/2441d92f-dca0-42c8-8adc-4aec1f428d7d" />
-
-
-
-
-## 📌 Functionality ¤¤¤
+## 📌 Functionality 
 - Length: min 8 characters
 - Complexity: Uppercase, lowercase, special character and digit(s)
 - No whitespace allowed
@@ -19,7 +11,7 @@
 - Logging to file (possible to disable)
 - Warning if run as root
 
-## 🧩 Requirements: ##
+## 🧩 Requirements
 - Linux (Script will terminate if != Linux)
 - curl
 - Internet connection
@@ -27,7 +19,7 @@
 
 
 
-## 📥 Installation ##
+## 📥 Installation 
 git clone https://github.com/JohanGabrielson/as20/
 cd as20/projekt
 chmod +x check_password.sh
@@ -44,7 +36,7 @@ This will unpack the txt-file, which will make the script run as intended.
 
 
 
-## ▶️ Usage ##
+## ▶️ Usage 
 - Run by command: ./check_password.sh
 
 Available flags: -h, --help       Visa hjälp
@@ -57,11 +49,20 @@ Example:
 ./check_password.sh --debug
 
 
-## Logging ##
+## Logging 
 Data is logged to password_checker.log in the same folder as the script is located in.
 Logs:
 - INFO
 - WARNING
 - ERROR
 - DEBUG (if enabled)
+
+
+## Example 
+
+<img width="1967" height="958" alt="Skärmbild 2026-01-09 140415" src="https://github.com/user-attachments/assets/2441d92f-dca0-42c8-8adc-4aec1f428d7d" />
+
+
+## Auhtor and version
+Created by Johan, version 1.0
 
