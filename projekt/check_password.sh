@@ -23,8 +23,11 @@ debug()   { [[ $DEBUG == true ]] && echo -e "${MAGENTA}[DEBUG]${RESET} $1"; }
 SCRIPT_VERSION="1.0"
 SCRIPT_AUTHOR="Johan"
 
+# ==== Variables definition ====
 NOLOG=false
 DEBUG=false
+BENCHMARK=false
+START_TIME=$(date +%s%3N)
 
 # ==== Help  ====
 show_help() {
@@ -39,6 +42,7 @@ show_help() {
     echo " -v,  --version   Show verion and author"
     echo "      --nolog     Disable logging to file"
     echo "      --debug     Enable debugging"
+    echo "      --benchmark Measure execution time of the script. Useful for performance testing"
     echo ""
     echo ""
     echo "Examples:"
@@ -55,6 +59,8 @@ show_version() {
     echo "Password checker script v$SCRIPT_VERSION"
     echo "Developed by $SCRIPT_AUTHOR"
 }
+
+# ==== Manual ====
 
 show_man() {
     cat << 'EOF'
@@ -82,6 +88,9 @@ OPTIONS
 
     --debug
         Enable verbose debug output.
+
+    --benchmark
+        Measure runtime of the script in milliseconds.
 
     --man
         Show this manual page.
@@ -120,6 +129,10 @@ EOF
 
 }
 
+# ==== Start time of script for benchmark option ====
+
+START_TIME=$(date +%s%3N)
+
 # ==== Arguments, support multiple flags  ====
 while [[ $# -gt 0  ]]; do
     case "$1" in
@@ -142,6 +155,9 @@ while [[ $# -gt 0  ]]; do
        --debug)
            DEBUG=true
            debug "[DEBUG] Debug mode enabled"
+           ;;
+       --benchmark)
+           BENCHMARK=true
            ;;
        *) error "Unknown option: $1"
           echo "Use --help for usage information"
@@ -427,6 +443,12 @@ while true; do
             n|N)
                log_event "INFO" "User chose to exit script"
                echo "Exiting"
+               # ==== Benchmark output (early exit) ====
+               if [[ "$BENCHMARK" == true ]]; then
+                   END_TIME=$(date +%s%3N)
+                   ELAPSED=$((END_TIME - START_TIME))
+                   echo "Execution time: ${ELAPSED} ms"
+               fi
                exit 0
                ;;
             *)
@@ -438,3 +460,9 @@ while true; do
    
 done
 
+# ==== Benchmark output ====
+if [[ "$BENCHMARK" == true ]]; then
+    END_TIME=$(date +%s%3N)
+    ELAPSED=$((END_TIME - START_TIME))
+    echo "Execution time: ${ELAPSED} ms"
+fi
