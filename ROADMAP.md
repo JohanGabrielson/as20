@@ -2,7 +2,7 @@
 <p> Long term development plan for Password Security Checker </p>
 
 ## 🔍 Overview 
-<p> This is a roadmap of the future development of Password Security Checker. It will gradually move from a Bash-based script into a cross platform password auditing tool with deeper analysis and improved performance. </p>
+This is a roadmap of the future development of Password Security Checker. It will gradually move from a Bash-based script into a cross platform password auditing tool with deeper analysis and improved performance. </p>
 
 ## 🚀 Short term goals
 <ol>
