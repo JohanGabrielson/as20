@@ -53,6 +53,7 @@ sudo gzip -d /usr/share/wordlists/rockyou.txt.gz 2>/dev/null
 | `-v`, `--version`  | Show version and author    |
 | `--nolog`          | Disable logging            |
 | `--debug`          | Enable debug mode          |
+| `--benchmark`      | Measure execution time     |
 | `--man`            | Show manual                |
 
 
