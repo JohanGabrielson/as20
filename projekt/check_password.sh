@@ -129,9 +129,6 @@ EOF
 
 }
 
-# ==== Start time of script for benchmark option ====
-
-START_TIME=$(date +%s%3N)
 
 # ==== Arguments, support multiple flags  ====
 while [[ $# -gt 0  ]]; do
