@@ -120,8 +120,8 @@ EOF
 
 }
 
-# ==== Arguments ====
-if [[ $# -gt 0  ]]; then 
+# ==== Arguments, support multiple flags  ====
+while [[ $# -gt 0  ]]; do
     case "$1" in
        -h|--help)
            show_help
@@ -148,7 +148,10 @@ if [[ $# -gt 0  ]]; then
           exit 1
           ;;
     esac
-fi
+    shift
+done
+
+
 
 # ==== Header  =====
 
