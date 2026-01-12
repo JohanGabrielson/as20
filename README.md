@@ -102,7 +102,10 @@ Free to use for anyone, anywhere, anytime.
 ## ⚠️  Known limitations 
 - Requires Internet connection for HIBP check
 - rockyou.txt has to be manually unpacked
-- Script is designed for Linux only
+- Only works on Linux (Linux specific tools and paths are used)
+- No detection of common templates or repeated sequences
+- No fuzzy matching (not detecting close matches, such as similar spelling of words)
+- No conf file for customization
 
 ##  🗂️  Version History
 - **1.0** - Initial release
