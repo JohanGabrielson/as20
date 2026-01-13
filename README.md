@@ -2,7 +2,7 @@
 A Bash-based password auditing tool to check strength, complexity, check against local wordlist and online leaks.
 
 ## 📌 Functionality 
-- Length: min 8 characters
+- Length: min 12 characters
 - Complexity: Uppercase, lowercase, special character and digit(s)
 - No whitespace allowed
 - Checking against local wordlist (rockyou.txt)
@@ -51,9 +51,9 @@ sudo gzip -d /usr/share/wordlists/rockyou.txt.gz 2>/dev/null
 |--------------|-----------------------------|
 | `-h`, `--help`     | Show help text             |
 | `-v`, `--version`  | Show version and author    |
-| `--nolog`          | Disable logging            |
-| `--debug`          | Enable debug mode          |
-| `--benchmark`      | Measure execution time     |
+| `-n`, `--nolog`    | Disable logging            |
+| `-d`, `--debug`    | Enable debug mode          |
+| `-b`, `--benchmark`| Measure execution time     |
 | `--man`            | Show manual                |
 
 
