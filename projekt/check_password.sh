@@ -40,9 +40,9 @@ show_help() {
     echo "Options:"
     echo " -h,  --help      Show this help message and exit" 
     echo " -v,  --version   Show verion and author"
-    echo "      --nolog     Disable logging to file"
-    echo "      --debug     Enable debugging"
-    echo "      --benchmark Measure execution time of the script. Useful for performance testing"
+    echo " -n,  --nolog     Disable logging to file"
+    echo " -d,  --debug     Enable debugging"
+    echo " -b,  --benchmark Measure execution time of the script. Useful for performance testing"
     echo ""
     echo ""
     echo "Examples:"
@@ -83,13 +83,13 @@ OPTIONS
     -v, --version
         Show version and author info.
 
-    --nolog
+    -n, --nolog
         Disavble logging to file.
 
-    --debug
+    -d, --debug
         Enable verbose debug output.
 
-    --benchmark
+    -b, --benchmark
         Measure runtime of the script in milliseconds.
 
     --man
@@ -130,7 +130,7 @@ EOF
 }
 
 
-# ==== Arguments, support multiple flags  ====
+# ==== Arguments, support for multiple flags  ====
 while [[ $# -gt 0  ]]; do
     case "$1" in
        -h|--help)
@@ -145,15 +145,15 @@ while [[ $# -gt 0  ]]; do
            show_man
            exit 0
            ;;
-       --nolog)
+       -n|--nolog)
            NOLOG=true
            info "[INFO] Logging disabled"
            ;;
-       --debug)
+       -d|--debug)
            DEBUG=true
            debug "[DEBUG] Debug mode enabled"
            ;;
-       --benchmark)
+       -b|--benchmark)
            BENCHMARK=true
            ;;
        *) error "Unknown option: $1"
@@ -206,13 +206,7 @@ if [[ ! -f "$Logfile" ]]; then
 fi
 
 
-
-# Create logfile if it does not exist and add permissions
-#if [[ ! -f "$Logfile" ]]; then
- #   sudo touch "$Logfile"
-  #  sudo chmod 644 "$Logfile"
-#fi
-
+# ==== Logging events =====
 log_event() {
     local level="$1"
     local message="$2"
@@ -221,7 +215,7 @@ log_event() {
     if [[ "$NOLOG" == true ]]; then
         return
     fi
-
+            # timestamp for log
     local timestamp
     timestamp=$(date "+%Y-%m-%d %H:%M:%S")
     echo "$timestamp [$level] $message" >> "$Logfile"
@@ -289,20 +283,17 @@ prompt_password() {
     done
 }
 
-# ==== Function: Check complexity and length  ====
-# ====            =====
-# ==== Purpose: check that password has       ====
-# ==== a sufficient length and contains a digit
-# ==== ======== =====
+# ==== Check complexity and length, min 12 characters incl. special character,
+#      and lowercase and uppercase and digit   =====
 check_length_and_complexity() {
-    local pw="$1" # Takes password as first argument 
+    local pw="$1"
     
     debug "Starting complexity check"
     debug "Password length: ${#pw}"
 
     log_event "INFO" "Checking password length and complexity"
     # Checks password length
-    if [[ ${#pw} -lt 8 ]]; then
+    if [[ ${#pw} -lt 12 ]]; then
         
         error "Password is too short. Must be at least 8 characters."
         log_event "ERROR" "Passwords is too short"
@@ -312,7 +303,7 @@ check_length_and_complexity() {
     echo "" 
     log_event "INFO" "Password check initiated."
 
-    # Checks for empty password or spaces
+    # Checks for empty password or spaces, return error if password is blank
     if [[ -z "$password" || "$password" =~ ^[[:space:]]+$  ]]; then
         error "Password cannot be empty or only spaces. Please try again."
         log_event "ERROR" "Empty or whitespace-only password entered"
@@ -343,10 +334,10 @@ check_length_and_complexity() {
     return 0 # All ok, criteria is met
 }
 
-# ==== Function: Check wordlist  =====
-# ====           =====           =====
-# ==== Purpose: Check if password is in rockyou.txt 
-# ==== ======== =====
+# ==== Check wordlist (rockyou.txt): returns a warning if the password 
+#      is found in the wordlist and suggests that the user choose another 
+#      password     =======
+
 
 check_local_wordlist() {
     local pw="$1"
@@ -363,15 +354,17 @@ check_local_wordlist() {
         log_event "WARNING" "Password is listed in rockyou.txt"
         warn "Password is listed in  rockyou.txt - You should choose another."
         return 1
-    fi
+    fi 
     debug "Password not found in rockyou.txt"
     log_event "INFO" "Password not found in rockyou.txt"
     return 0 # Not found in rockyou.txt
 }
 
-# ==== Function: Check online leaks  ====
-# ==== Purpose: Check if password is in known dataleaks 
-# ==== ======== ====
+# ==== Check if password is in know leaks through HIBP. Using K-anonymity:
+#      only the 5 first characters of the SHA-1-hash is sent (to increase security)
+#      a warning is returned if it is leaked and user is suggested to choose another.
+
+
 check_online_leak() {
     local pw="$1"
 
@@ -389,7 +382,7 @@ check_online_leak() {
     debug "haveibeenpwned suffix: $suffix" 
    
 
-    #Retrieve all hash-suffix matching the prefix
+    # Retrieve all hash-suffix matching the prefix
     debug "Sending request to haveibeenpwned api..."
     local response=$(curl -s "https://api.pwnedpasswords.com/range/$prefix")
 
@@ -409,9 +402,12 @@ check_online_leak() {
 
 
 while true; do
-    
+    # prompt password
     prompt_password
     
+    # Checking if password is long enough, complex enough and is not in 
+    # rockyou.txt or leaks: if so, user is informed that password is 
+    # approved  ====
     if ! check_length_and_complexity "$password"; then
         log_event "ERROR" "Complexity check failed"
     elif ! check_local_wordlist "$password"; then
