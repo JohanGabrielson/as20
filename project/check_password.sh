@@ -186,6 +186,7 @@ show_header() {
 
 }
 
+
 show_header
 
 
@@ -256,7 +257,6 @@ if [[ ! -f "$Wordlist" ]]; then # Check if file is available
 fi
 
 # ==== Check so script is not running as root, if so warning to user  ====
-
 if [[ "$EUID" -eq 0 ]]; then
     warn "WARNING: Script is running as root. This is not recommended."
     log_event "WARNING" "Script is running as root"
@@ -295,7 +295,7 @@ check_length_and_complexity() {
     # Checks password length
     if [[ ${#pw} -lt 12 ]]; then
         
-        error "Password is too short. Must be at least 8 characters."
+        error "Password is too short. Must be at least 12 characters."
         log_event "ERROR" "Passwords is too short"
         return 1
     fi
