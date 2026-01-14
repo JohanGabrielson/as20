@@ -4,52 +4,52 @@ import time
 system = platform.system()
 import os
 
-
+# Virus signature (harmless, used for AV-testing)
 eicar_str = r"X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*"
 
+# Check which OS is being used. 
 if system == "Windows":
-    print ("Windows OS upptäckt. Skriptet fortsätter")
-    file_path = os.path.expanduser("C:/Users/johan/.vscode/3/eicar_test.txt")
+    # Save EICAR file in downloads
+    print ("Windows OS detected. The script will continue.")
+    file_path = os.path.expanduser("~/Downloads/eicar_test.txt")
 
-
-
-   
 elif system == "Linux":
-    print("Linux upptäckt...Fortsätter.")
-    file_path = os.path.expanduser("~/eicar_test.txt")
+    print("Linux detected. This script is intended for Windows.")
+    exit()
 
 elif system == "Darwin":
-    print("macOS upptäckt. Detta script är avsett för Windows.")
+    print("macOS detected. This script is intended for Windows.")
     exit()
 
 else:
-    print(f"Okänt operativsystem ({system}). Detta script är avsett för Windows. Avbryter körning.")
+    print(f"Unknown OS ({system}). This script is intended for Windows.")
     exit()
 
-try: 
+# Try to create the file
+try:
     with open(file_path, "w") as f:
         f.write(eicar_str)
-    print(f"[+++] EICAR-testfil skapad: {file_path}")
-    print("[---] OBS: denna fil är ofarlig men ska upptäckas av antivirusprogram")
+    print(f"[+++] EICAR test file created: {file_path}")
+    print("[---] This file is harmless but should be detected by antivirus software.")
 except Exception as e:
-    print("[!!!] Kunde inte skapa filen.")
+    print("[!!!] Could not create the file.")
     exit()
 
-time.sleep(3)
+# wait so the antivirus can react
+time.sleep(10)
 
 if os.path.exists(file_path):
     try:
         with open(file_path, "r") as f:
-	    file_content = f.read()
-       
-	if file_content == eicar_str:
-        print("[+++] Filen finns kvar och matchar EICAR-signaturen")
-        print("[---] Kan betyda att antivirus inte har reagerat ännu")
-	else:
-	    print("[???] Filen finns kvar men innehållet matchar inte EICAR-signaturen")
+            file_content = f.read()
+        if file_content == eicar_str:
+            print("[+++] File still exists and matches the EICAR signature.")
+            print("[---] Antivirus software may not have reacted to it yet.")
+        else:
+            print("[???] File still exists but does not match EICAR signature.")
     except:
-        print("[!!!] Filen kunde inte läsas.")
-	print("[!!!] Antivirus har tagit bort filen.")
-else: 
-    print"([!!!] Filen kunde inte hittas.)"
-    print"([!!!] Antivirus har tagit bort filen)"
+        print("[!!!] File exists but could not be read.")
+        print("[!!!] Antivirus may have locked or quarantined the file.")
+else:
+    print("[!!!] File could not be found.")
+    print("[!!!] Antivirus has most likely removed the file.")
