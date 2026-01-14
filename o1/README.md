@@ -6,8 +6,7 @@ users, network, hardware and services. This can be used for security tests,
 troubleshooting or documentation of system status. 
 
 The script will automatically generate a logfile with timestamps, for example: 
-```
-system_report_2025_12_20-12-45-33.txt ```
+``` system_report_2025_12_20-12-45-33.txt ```
 
 ## Functionality
 The script will collect:
