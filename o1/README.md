@@ -36,10 +36,8 @@ The script will collect:
 ## How to use
 <li> Give permissions </li> 
 ``` 
-chmod +x system_script.sh 
-```
+chmod +x system_script.sh ```
 <li> Run the script </li>
 ```
-./system_script.sh 
-```
+./system_script.sh ```
 
