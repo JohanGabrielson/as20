@@ -6,7 +6,8 @@ users, network, hardware and services. This can be used for security tests,
 troubleshooting or documentation of system status. 
 
 The script will automatically generate a logfile with timestamps, for example: 
-``` system_report_2025_12_20-12-45-33.txt ```
+```
+system_report_2025_12_20-12-45-33.txt ```
 
 ## Functionality
 The script will collect:
@@ -35,7 +36,11 @@ The script will collect:
 
 ## How to use
 <li> Give permissions </li> 
-``` chmod +x system_script.sh ```
+``` 
+chmod +x system_script.sh 
+```
 <li> Run the script </li>
-``` ./system_script.sh ```
+```
+./system_script.sh 
+```
 
