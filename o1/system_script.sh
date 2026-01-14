@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-# Detta script samlar in systeminformation - RECON
+# This is a script to collect system information - RECON 
 #
-# Kan användas för följande attacker:
+# 
 # 
 echo "RECON SCRIPT TO CHECK LINUX ENVIRONMENT - See log file"
 
