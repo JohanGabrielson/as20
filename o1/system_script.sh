@@ -3,30 +3,26 @@
 # Detta script samlar in systeminformation - RECON
 #
 # Kan användas för följande attacker:
-# [Skriv möjliga attacker]
-#
-# Author: Frans Schartau
-# Last Update: 2025-01-01
-
-echo "RECON SCRIPT FÖR ATT KONTROLLERA LINUXMILJÖ - Se loggfil"
+# 
+echo "RECON SCRIPT TO CHECK LINUX ENVIRONMENT - See log file"
 
 OUTPUT="system_report_$(date +%F_%H-%M-%S).txt" 
 echo "" >> $OUTPUT
 echo
-echo "=== SYSTEMINFO ===" >> $OUTPUT
+echo "=== SYSTEM INFO ===" >> $OUTPUT
 uname -a >> $OUTPUT
 who >> $OUTPUT
 echo >> $OUTPUT
-echo "=== AKTUELL ANVÄNDARE ===" >> $OUTPUT
+echo "=== CURRENT USER ===" >> $OUTPUT
 echo $USER >>  $OUTPUT
 echo  >> $OUTPUT
 
 echo >> $OUTPUT
-echo "=== ANVÄNDARE MED SHELL ===" >> $OUTPUT
+echo "=== USER WITH  SHELL ===" >> $OUTPUT
 grep "sh$" /etc/passwd >> $OUTPUT
 
 echo >> $OUTPUT
-echo "=== NÄTVERK ===" >> $OUTPUT
+echo "=== NETWORK ===" >> $OUTPUT
 echo "IP configuration: " >> $OUTPUT
 ip a | grep inet >> $OUTPUT
 echo  "routing table: " >> $OUTPUT
@@ -49,4 +45,9 @@ echo "" >> $OUTPUT
 echo "=== Services ===" >> $OUTPUT
 echo "Active services"  >> $OUTPUT
 systemctl list-units --type=service --state=running >> $OUTPUT
+
+echo "=== AVAILABLE UPDATES ===" >> $OUTPUT
+echo "Available updates" >> $OUTPUT
+apt update 2>/dev/null
+apt list --upgradable 2>/dev/null >> $OUTPUT
 
