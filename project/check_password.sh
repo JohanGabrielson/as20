@@ -268,8 +268,19 @@ prompt_password() {
         echo -n  "Enter a password to check: "
         read -s password
         echo ""
-
         log_event "INFO" "Password check initiated."
+
+        echo -n "Re-enter password to confirm: "
+        read -s password_confirm
+        echo ""
+
+        # Check if passwords match
+        if [[ "$password" != "$password_confirm" ]]; then
+            error "Password do not match. Please try again."
+            log_event "ERROR" "Passwords do not match"
+            echo ""
+            continue
+        fi
 
         # Checks for empty password or spaces
         if [[ -z "$password" || "$password" =~ ^[[:space:]]+$  ]]; then

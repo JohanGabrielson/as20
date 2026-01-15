@@ -9,7 +9,7 @@ eicar_str = r"X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+
 
 # Check which OS is being used. 
 if system == "Windows":
-    # Save EICAR file in downloads
+    # Save EICAR file in downloads if the script runs on Windows
     print ("Windows OS detected. The script will continue.")
     file_path = os.path.expanduser("~/Downloads/eicar_test.txt")
 

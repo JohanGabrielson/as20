@@ -6,9 +6,11 @@
 # 
 echo "RECON SCRIPT TO CHECK LINUX ENVIRONMENT - See log file"
 
+# Logs to a file with timestamp
 OUTPUT="system_report_$(date +%F_%H-%M-%S).txt" 
 echo "" >> $OUTPUT
 echo
+# system info 
 echo "=== SYSTEM INFO ===" >> $OUTPUT
 uname -a >> $OUTPUT
 who >> $OUTPUT
@@ -17,10 +19,12 @@ echo "=== CURRENT USER ===" >> $OUTPUT
 echo $USER >>  $OUTPUT
 echo  >> $OUTPUT
 
+# users with shell
 echo >> $OUTPUT
 echo "=== USER WITH  SHELL ===" >> $OUTPUT
 grep "sh$" /etc/passwd >> $OUTPUT
 
+# network info
 echo >> $OUTPUT
 echo "=== NETWORK ===" >> $OUTPUT
 echo "IP configuration: " >> $OUTPUT
@@ -33,6 +37,7 @@ echo "" >> $OUTPUT
 
 echo >> $OUTPUT
 
+# hardware info
 echo "=== Hardware ===" >> $OUTPUT
 echo "CPU: " >> $OUTPUT
 lscpu >> $OUTPUT
@@ -42,10 +47,12 @@ echo "Disks: " >> $OUTPUT
 lsblk >> $OUTPUT
 echo "" >> $OUTPUT
 
+# active services
 echo "=== Services ===" >> $OUTPUT
 echo "Active services"  >> $OUTPUT
 systemctl list-units --type=service --state=running >> $OUTPUT
 
+# available updates
 echo "=== AVAILABLE UPDATES ===" >> $OUTPUT
 echo "Available updates" >> $OUTPUT
 apt update 2>/dev/null
