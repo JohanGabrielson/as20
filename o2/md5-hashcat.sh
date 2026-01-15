@@ -4,7 +4,7 @@
 
 # Check that hashcat is installed 
 if ! command -v hashcat &> /dev/null; then
-    echo "ERROR: hashcat är inte installerat!"
+    echo "ERROR: hashcat is not installed!"
     echo "To install: sudo apt install hashcat"
     exit 1
 fi
@@ -14,9 +14,13 @@ hashcat --version | head -n 1
 echo "==========================="
 
 # Standard settings
-HASH_FILE="${1:-mina_hashar.txt}"
-MASK="${2:-?d?d?d?d?d?}"  			# HASH_TYPE="0"    # 0=MD5 hash mode
-ATTACK_MODE="3"  				# USe Mask attack
+HASH_FILE="${1:-my_hashes.txt}"
+# Digits to try
+MASK="${2:-?d?d?d?d?d?d?d?d?d?d}"
+# MD5 hash mode
+HASH_TYPE="0"
+# Use mask attack
+ATTACK_MODE="3"
 
 echo "Starting hashcat ..."
 echo "=================="
