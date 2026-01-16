@@ -89,15 +89,16 @@ Free to use for anyone, anywhere, anytime.
 
 ## ⚙️ How it works
 1. User enters a password (input is hidden)
-2. Script validates:
+2. User re-enters password for validation
+3. Script validates:
 - Length
 - Complexity
 - Whitespace
-3. Script checks:
+4. Script checks:
   - Local wordlist (rockyou.txt)
   - Online leaks (HaveIBeenPwned API)
-4. Script logs all events
-5. User chooses to try again or exit
+5. Script logs all events (log file is created in the same directory as the script is in)
+6. User chooses to try again or exit
 
 
 ## ⚠️  Known limitations 
