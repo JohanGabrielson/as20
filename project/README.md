@@ -43,7 +43,7 @@ sudo gzip -d /usr/share/wordlists/rockyou.txt.gz 2>/dev/null
 
 ## ▶️ Usage 
 - Run by command:
-```bash/check_password.sh ```
+```./check_password.sh ```
 
 ### Available flags
 
