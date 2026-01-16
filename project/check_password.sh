@@ -84,7 +84,7 @@ OPTIONS
         Show version and author info.
 
     -n, --nolog
-        Disavble logging to file.
+        Disable logging to file.
 
     -d, --debug
         Enable verbose debug output.
